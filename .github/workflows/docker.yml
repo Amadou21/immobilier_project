@@ -106,7 +106,8 @@ jobs:
 
       - name: docker login
         run: |
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+            docker login -u "$DOCKER_USER" -p "$DOCKER_PASSWORD"
+      #echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
 
       - name: Get current date # get the date of the build
         id: date
