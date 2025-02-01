@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Management</title>
+  <style>
+    /* Style de la navbar */
+    nav {
+      background-color: #333;
+      overflow: hidden;
+    }
+    nav a {
+      float: left;
+      display: block;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 20px;
+      text-decoration: none;
+    }
+    nav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+    nav a.active {
+      background-color: #4CAF50;
+      color: white;
+    }
+    /* Style pour le contenu */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .pagination {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="/" class="active">Accueil</a>
+    <a href="/create">Ajouter un client</a>
+    <a href="/predict">Prediction</a>
+  </nav>
+
+  <!-- Titre -->
+  <h1>Liste des clients</h1>
+  <a href="/create"><button>Ajouter</button></a>
+
+  <!-- Tableau des clients -->
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom </th>
+        <th>Prénom </th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for customer in customers %}
+      <tr>
+        <td>{{ customer.id }}</td>
+        <td>{{ customer.nom }}</td>
+        <td>{{ customer.prenom }}</td>
+        <td>
+          <a href="edit/{{ customer.id }}"><button>Modifier</button></a>
+          <a href="javascript:void(0);" onclick="confirmDelete('{{ customer.id }}')"><button>Supprimer</button></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Formulaire pour la pagination -->
+  <form method="get">
+    <label for="per_page">Rows per page:</label>
+    <select id="per_page" name="per_page" onchange="this.form.submit()">
+      <option value="10" {% if per_page==10 %}selected{% endif %}>10</option>
+      <option value="20" {% if per_page==20 %}selected{% endif %}>20</option>
+      <option value="50" {% if per_page==50 %}selected{% endif %}>50</option>
+      <option value="100" {% if per_page==100 %}selected{% endif %}>100</option>
+    </select>
+  </form>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    {% if page > 1 %}
+    <a href="{{ url_for('list_customers', page=page-1, per_page=per_page) }}">Previous</a>
+    {% endif %}
+    <span>Page {{ page }} of {{ total_pages }}</span>
+    {% if page < total_pages %}
+    <a href="{{ url_for('list_customers', page=page+1, per_page=per_page) }}">Next</a>
+    {% endif %}
+  </div>
+
+  <script>
+    function confirmDelete(customerId) {
+      if (confirm("Êtes-vous sûr de vouloir supprimer ce client ?")) {
+        window.location.href = "/delete/" + customerId;
+      }
+    }
+  </script>
+
+</body>
+
+</html>

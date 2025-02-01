@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prédiction</title>
+</head>
+<body>
+    <h1>Prédire le prix d'un bien immobilier</h1>
+    <form method="POST" action="{{ url_for('predict') }}">
+        {{ form.hidden_tag() }}
+        {{ form.area.label }} {{ form.area }}<br>
+        {{ form.bedrooms.label }} {{ form.bedrooms }}<br>
+        {{ form.bathrooms.label }} {{ form.bathrooms }}<br>
+        {{ form.stories.label }} {{ form.stories }}<br>
+        {{ form.mainroad.label }} {{ form.mainroad }}<br>
+        {{ form.guestroom.label }} {{ form.guestroom }}<br>
+        {{ form.basement.label }} {{ form.basement }}<br>
+        {{ form.hotwaterheating.label }} {{ form.hotwaterheating }}<br>
+        {{ form.airconditioning.label }} {{ form.airconditioning }}<br>
+        {{ form.parking.label }} {{ form.parking }}<br>
+        {{ form.prefarea.label }} {{ form.prefarea }}<br>
+        {{ form.semi_furnished.label }} {{ form.semi_furnished }}<br>
+        {{ form.unfurnished.label }} {{ form.unfurnished }}<br>
+        {{ form.submit }}
+    </form>
+</body>
+</html>

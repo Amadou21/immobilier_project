@@ -1,0 +1,2 @@
+# Pour ignorer l'env virtuelle lors du push vers les autres membres 
+.venv

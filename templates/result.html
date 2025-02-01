@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Résultat</title>
+</head>
+<body>
+    <h1>Résultat de la prédiction</h1>
+    <p>Le prix prédit en roupies est : {{ (prediction)|round(2) }} ₹</p>
+
+    {% set taux_change = 7 %}  <p>Le prix prédit en francs CFA est : {{ (prediction * taux_change)|round(2) }} FCFA</p>
+    <a href="{{ url_for('predict') }}">Nouvelle prédiction</a>
+</body>
+</html>

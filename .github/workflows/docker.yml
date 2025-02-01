@@ -1,0 +1,123 @@
+name: Flask and Streamlit CI/CD
+
+env:
+  DOCKER_USER: Abba21
+  DOCKER_PASSWORD: BWpk8wt-wC3YB.T
+  DOCKER_REPO_NAME: immobilier_project
+  MYSQL_USERNAME: root
+  MYSQL_PASSWORD: root
+
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: $MYSQL_USERNAME
+          MYSQL_DATABASE: $MYSQL_PASSWORD
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u $MYSQL_USERNAME -p $MYSQL_PASSWORD"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        run: docker build . -t immobilier_project
+
+      - name: List of Docker images
+        run: docker image ls
+
+      - name: Run Docker Container
+        run: docker run -d -p 5000:5000 immobilier_project
+
+      - name: List of Docker -a AFTER
+        run: docker ps -a  
+
+      - name: List of Docker -q AFTER
+        run: docker ps --filter "ancestor=immobilier_project" -q
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+        
+      # Cache Python dependencies
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Run Flask unit tests
+      - name: Run Flask Tests
+        env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: 3306
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+          MYSQL_DATABASE: customers_base
+        run: |
+          cd tests
+          ls -lhrt
+      #pytest tests/test_flask.py
+
+      # Test Streamlit
+      #- name: Test Streamlit app
+      #  run: |
+      #    streamlit hello --headless
+
+      # Docker build and push
+      #- name: Build and Push Docker Image
+      #  uses: docker/build-push-action@v4
+      #  with:
+      #    context: .
+      #    push: false
+
+      - name: docker login
+        run: | # log into docker hub account
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
+          
+      - name: Get current date # get the date of the build
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
+
+      - name: Build the Docker image # push The image to the docker hub
+        run: docker build . --file Dockerfile --tag $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.date.outputs.date }}
+
+      - name: Docker Push
+        run: docker push $DOCKER_USER/$DOCKER_REPO_NAME:${{ steps.date.outputs.date }}
+        
+      - name: Stop Docker Container
+        run: docker stop $(docker ps --filter "ancestor=immobilier_project" -q)

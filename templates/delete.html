@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmer la suppression</title>
+</head>
+<body>
+    <h1>Confirmer la suppression</h1>
+    <p>Êtes-vous sûr de vouloir supprimer ce client ?</p>
+    <form method="POST">
+        <button type="submit">Oui, supprimer</button>
+        <a href="{{ url_for('list_customers') }}"><button type="button">Annuler</button></a>
+    </form>
+</body>
+</html>

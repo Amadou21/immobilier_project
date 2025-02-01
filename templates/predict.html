@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prédiction immobilière</title>
+    <style>
+        /* Style de la navbar */
+        nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        nav a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Style général pour la page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        form {
+            width: 50%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        form label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        form input, form select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="/" class="active">Accueil</a>
+        <a href="/prediction">Prédiction</a>
+        <a href="/about">À propos</a>
+    </nav>
+
+    <!-- Titre -->
+    <h1>Prédisez le prix de votre bien</h1>
+
+    <!-- Formulaire -->
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            <label for="area">{{ form.area.label }}</label>
+            {{ form.area }}
+        </div>
+        <div>
+            <label for="bedrooms">{{ form.bedrooms.label }}</label>
+            {{ form.bedrooms }}
+        </div>
+        <div>
+            <label for="bathrooms">{{ form.bathrooms.label }}</label>
+            {{ form.bathrooms }}
+        </div>
+        <div>
+            <label for="stories">{{ form.stories.label }}</label>
+            {{ form.stories }}
+        </div>
+        <div>
+            <label for="mainroad">{{ form.mainroad.label }}</label>
+            {{ form.mainroad }}
+        </div>
+        <div>
+            <label for="guestroom">{{ form.guestroom.label }}</label>
+            {{ form.guestroom }}
+        </div>
+        <div>
+            <label for="basement">{{ form.basement.label }}</label>
+            {{ form.basement }}
+        </div>
+        <div>
+            <label for="hotwaterheating">{{ form.hotwaterheating.label }}</label>
+            {{ form.hotwaterheating }}
+        </div>
+        <div>
+            <label for="airconditioning">{{ form.airconditioning.label }}</label>
+            {{ form.airconditioning }}
+        </div>
+        <div>
+            <label for="parking">{{ form.parking.label }}</label>
+            {{ form.parking }}
+        </div>
+        <div>
+            <label for="prefarea">{{ form.prefarea.label }}</label>
+            {{ form.prefarea }}
+        </div>
+       <!-- Champ 'Meublé' avec RadioButton -->
+       <div>
+            <label for="semi_furnished">{{ form.semi_furnished.label }}</label><br>
+            <label>
+                <input type="radio" name="semi_furnished" value="00" {% if form.semi_furnished.data == '00' %}checked{% endif %}> Meublé
+            </label><br>
+            <label>
+                <input type="radio" name="semi_furnished" value="01" {% if form.semi_furnished.data == '01' %}checked{% endif %}> Non-meublé
+            </label><br>
+            <label>
+                <input type="radio" name="semi_furnished" value="10" {% if form.semi_furnished.data == '10' %}checked{% endif %}> Semi-meublé
+            </label>
+        </div>
+
+        
+        <button type="submit">Prédire</button>
+    </form>
+
+</body>
+<script>
+    // Fonction de validation avant la soumission du formulaire
+    function validateForm() {
+        // Liste des champs à vérifier
+        const fields = [
+            "area", "bedrooms", "bathrooms", "stories", "parking"
+        ];
+        
+        // Parcours chaque champ pour vérifier qu'il est >= 0
+        for (let field of fields) {
+            const value = document.querySelector(`#${field}`).value;
+            if (parseInt(value) < 0 || isNaN(value)) {
+                alert(`Le champ ${field} doit être un nombre supérieur ou égal à 0.`);
+                return false;  // Empêche l'envoi du formulaire
+            }
+        }
+
+        return true;  // Le formulaire est valide, il peut être soumis
+    }
+
+    // Attacher la fonction de validation au formulaire
+    document.querySelector("form").onsubmit = validateForm;
+</script>
+
+</html>
+
+
