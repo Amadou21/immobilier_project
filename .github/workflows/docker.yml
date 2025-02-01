@@ -104,9 +104,10 @@ jobs:
       #    context: .
       #    push: false
 
+
       - name: docker login
-        run: | # log into docker hub account
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
           
       - name: Get current date # get the date of the build
         id: date
