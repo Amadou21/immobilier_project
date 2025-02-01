@@ -1,12 +1,11 @@
 name: Flask and Streamlit CI/CD
 
 env:
-  DOCKER_USER: Abba21
-  DOCKER_PASSWORD: BWpk8wt-wC3YB.T
-  DOCKER_REPO_NAME: immobilier_project
-  MYSQL_USERNAME: root
-  MYSQL_PASSWORD: root
-
+  DOCKER_USER: ${{secrets.USER_NAME}}
+  DOCKER_PASSWORD: ${{secrets.PASSWORD}}
+  DOCKER_REPO_NAME: ${{secrets.REPOSITORY_DOCKER_HUB}}
+  MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME}}
+  MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
 
 on:
   push:
