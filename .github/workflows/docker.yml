@@ -104,11 +104,10 @@ jobs:
       #    context: .
       #    push: false
 
-
       - name: docker login
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
-          
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USER }}" --password-stdin
+
       - name: Get current date # get the date of the build
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d--%M-%S')"
